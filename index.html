@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Games — Défiez l'IA</title>
+<meta name="description" content="Trois jeux, une seule IA à faire tomber : Chifoumi, Morpion et Bataille Navale.">
+
+<!-- Polices : Space Grotesk (titres) + Inter (texte) + JetBrains Mono (scores/chiffres) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- ÉCRAN DE CHARGEMENT                                           -->
+<!-- ============================================================ -->
+<div id="loader" class="loader" aria-hidden="true">
+  <div class="loader__orb"></div>
+  <p class="loader__text">Initialisation de l'IA<span class="dots"><span>.</span><span>.</span><span>.</span></span></p>
+</div>
+
+<!-- Fond décoratif : halos dégradés animés (élément signature) -->
+<div class="bg-scene" aria-hidden="true">
+  <div class="bg-scene__grid"></div>
+  <div class="bg-scene__orb bg-scene__orb--blue"></div>
+  <div class="bg-scene__orb bg-scene__orb--violet"></div>
+  <div class="bg-scene__orb bg-scene__orb--small"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BARRE SUPÉRIEURE                                              -->
+<!-- ============================================================ -->
+<header class="topbar" role="banner">
+  <div class="topbar__left">
+    <button id="btn-home" class="icon-btn" title="Accueil" aria-label="Retour à l'accueil">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="topbar__title">
+      <span class="topbar__game-name" id="current-game-name">Mini Games</span>
+    </div>
+  </div>
+
+  <div class="topbar__right">
+    <div class="topbar__score" id="topbar-score" title="Score global">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2l2.9 6.26L21.5 9l-5 4.87L17.8 21 12 17.27 6.2 21l1.3-7.13-5-4.87 6.6-.74L12 2z" fill="currentColor"/></svg>
+      <span id="score-victoires">0</span>V · <span id="score-defaites">0</span>D · <span id="score-egalites">0</span>N
+    </div>
+    <button id="btn-replay" class="icon-btn" title="Rejouer" aria-label="Rejouer la partie" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 11A8 8 0 1 0 18.5 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="btn-stats" class="icon-btn" title="Statistiques" aria-label="Voir les statistiques">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 20V10M11 20V4M18 20v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button id="btn-settings" class="icon-btn" title="Paramètres" aria-label="Ouvrir les paramètres">
+      <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 13a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V19a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H4a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H10a1.7 1.7 0 0 0 1-1.55V4a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V10a1.7 1.7 0 0 0 1.55 1H20a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- CONTENU PRINCIPAL                                             -->
+<!-- ============================================================ -->
+<main id="main-content" class="main-content">
+
+  <!-- ---------------- ÉCRAN ACCUEIL ---------------- -->
+  <section id="screen-accueil" class="screen screen--accueil" aria-labelledby="accueil-titre">
+    <div class="hero">
+      <p class="eyebrow">Trois jeux · Une seule IA</p>
+      <h1 id="accueil-titre" class="hero__title">Mini <span class="text-gradient">Games</span></h1>
+      <p class="hero__subtitle">Choisissez un jeu</p>
+    </div>
+
+    <div class="cards-grid" id="cards-grid" role="list">
+      <!-- Les cartes de jeu sont injectées par menu.js -->
+    </div>
+  </section>
+
+  <!-- ---------------- ÉCRAN CHIFOUMI ---------------- -->
+  <section id="screen-chifoumi" class="screen" hidden aria-labelledby="chifoumi-titre">
+    <h2 id="chifoumi-titre" class="sr-only">Chifoumi</h2>
+    <div class="game-header">
+      <div class="difficulty-select" id="chifoumi-round-info">
+        <span class="badge">Manche <span id="chifoumi-round">1</span></span>
+      </div>
+    </div>
+
+    <div class="chifoumi-arena">
+      <div class="chifoumi-player">
+        <p class="chifoumi-label">Vous</p>
+        <div class="chifoumi-display" id="chifoumi-player-display">?</div>
+      </div>
+      <div class="chifoumi-vs">
+        <span id="chifoumi-vs-text">VS</span>
+        <p class="chifoumi-result" id="chifoumi-result" aria-live="polite"></p>
+      </div>
+      <div class="chifoumi-player">
+        <p class="chifoumi-label">IA</p>
+        <div class="chifoumi-display" id="chifoumi-ai-display">?</div>
+      </div>
+    </div>
+
+    <div class="chifoumi-choices" id="chifoumi-choices">
+      <button class="choice-btn" data-choice="pierre" aria-label="Choisir Pierre">
+        <svg viewBox="0 0 64 64" width="40" height="40"><circle cx="32" cy="34" r="20" fill="none" stroke="currentColor" stroke-width="3"/><path d="M20 30q12-10 24 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Pierre</span>
+      </button>
+      <button class="choice-btn" data-choice="feuille" aria-label="Choisir Feuille">
+        <svg viewBox="0 0 64 64" width="40" height="40"><rect x="14" y="14" width="36" height="36" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M20 26h24M20 34h24M20 42h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Feuille</span>
+      </button>
+      <button class="choice-btn" data-choice="ciseaux" aria-label="Choisir Ciseaux">
+        <svg viewBox="0 0 64 64" width="40" height="40"><circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="20" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M25 24 48 46M25 40 48 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Ciseaux</span>
+      </button>
+    </div>
+
+    <div class="chifoumi-score-row">
+      <div class="mini-stat"><span class="mini-stat__label">Victoires</span><span class="mini-stat__value" id="chifoumi-v">0</span></div>
+      <div class="mini-stat"><span class="mini-stat__label">Défaites</span><span class="mini-stat__value" id="chifoumi-d">0</span></div>
+      <div class="mini-stat"><span class="mini-stat__label">Nuls</span><span class="mini-stat__value" id="chifoumi-n">0</span></div>
+    </div>
+
+    <div class="history-panel">
+      <p class="history-panel__title">Historique (10 dernières manches)</p>
+      <div class="history-list" id="chifoumi-history"></div>
+    </div>
+  </section>
+
+  <!-- ---------------- ÉCRAN MORPION ---------------- -->
+  <section id="screen-morpion" class="screen" hidden aria-labelledby="morpion-titre">
+    <h2 id="morpion-titre" class="sr-only">Morpion</h2>
+
+    <div class="game-header">
+      <div class="difficulty-select" role="radiogroup" aria-label="Niveau de difficulté">
+        <button class="diff-btn" data-diff="facile" role="radio" aria-checked="false">Facile</button>
+        <button class="diff-btn" data-diff="moyen" role="radio" aria-checked="false">Moyen</button>
+        <button class="diff-btn" data-diff="difficile" role="radio" aria-checked="true">Difficile</button>
+      </div>
+      <p class="turn-indicator" id="morpion-turn" aria-live="polite">À vous de jouer (X)</p>
+    </div>
+
+    <div class="morpion-board" id="morpion-board" role="grid" aria-label="Grille de morpion 3 par 3"></div>
+
+    <div class="chifoumi-score-row">
+      <div class="mini-stat"><span class="mini-stat__label">Victoires</span><span class="mini-stat__value" id="morpion-v">0</span></div>
+      <div class="mini-stat"><span class="mini-stat__label">Défaites</span><span class="mini-stat__value" id="morpion-d">0</span></div>
+      <div class="mini-stat"><span class="mini-stat__label">Nuls</span><span class="mini-stat__value" id="morpion-n">0</span></div>
+    </div>
+
+    <div class="history-panel">
+      <p class="history-panel__title">Historique des parties</p>
+      <div class="history-list" id="morpion-history"></div>
+    </div>
+  </section>
+
+  <!-- ---------------- ÉCRAN BATAILLE NAVALE ---------------- -->
+  <section id="screen-bataille" class="screen" hidden aria-labelledby="bataille-titre">
+    <h2 id="bataille-titre" class="sr-only">Bataille Navale</h2>
+
+    <!-- Phase de placement -->
+    <div id="bataille-placement" class="bataille-placement">
+      <div class="game-header">
+        <p class="turn-indicator">Placez votre flotte</p>
+        <div class="placement-controls">
+          <button id="btn-rotate" class="btn btn--ghost">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 11A8 8 0 1 0 18.5 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Rotation
+          </button>
+          <button id="btn-random-placement" class="btn btn--ghost">Placement aléatoire</button>
+          <button id="btn-confirm-placement" class="btn btn--primary" disabled>Commencer la bataille</button>
+        </div>
+      </div>
+      <div class="placement-layout">
+        <div class="ships-tray" id="ships-tray" aria-label="Bateaux à placer"></div>
+        <div class="board-wrap">
+          <p class="board-caption">Votre flotte</p>
+          <div class="bataille-grid" id="grid-placement" role="grid" aria-label="Grille de placement 10 par 10"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase de jeu -->
+    <div id="bataille-jeu" class="bataille-jeu" hidden>
+      <div class="game-header">
+        <p class="turn-indicator" id="bataille-turn" aria-live="polite">À vous de tirer</p>
+        <div class="bataille-stats-row">
+          <span class="badge" id="bataille-precision">Précision : 0%</span>
+          <span class="badge" id="bataille-tirs">Tirs : 0</span>
+          <span class="badge" id="bataille-temps">00:00</span>
+        </div>
+      </div>
+
+      <div class="boards-row">
+        <div class="board-wrap">
+          <p class="board-caption">Votre flotte <span id="ships-left-player"></span></p>
+          <div class="bataille-grid bataille-grid--player" id="grid-player" role="grid" aria-label="Votre grille"></div>
+        </div>
+        <div class="board-wrap">
+          <p class="board-caption">Flotte ennemie <span id="ships-left-ai"></span></p>
+          <div class="bataille-grid bataille-grid--enemy" id="grid-enemy" role="grid" aria-label="Grille ennemie, cliquez pour tirer"></div>
+        </div>
+      </div>
+
+      <div class="history-panel">
+        <p class="history-panel__title">Journal des événements</p>
+        <div class="history-list history-list--log" id="bataille-log"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================ -->
+<!-- MODALE PARAMÈTRES                                             -->
+<!-- ============================================================ -->
+<div id="modal-settings" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal__header">
+      <h2 id="settings-title">Paramètres</h2>
+      <button class="icon-btn" id="btn-close-settings" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="modal__body">
+      <div class="setting-row">
+        <div>
+          <p class="setting-row__title">Thème</p>
+          <p class="setting-row__desc">Mode sombre ou clair</p>
+        </div>
+        <div class="theme-switch" role="radiogroup" aria-label="Thème">
+          <button class="theme-btn" data-theme-choice="dark" aria-checked="true" role="radio">Sombre</button>
+          <button class="theme-btn" data-theme-choice="light" aria-checked="false" role="radio">Clair</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <p class="setting-row__title">Sons</p>
+          <p class="setting-row__desc">Activer les effets sonores</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-sound" checked>
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <p class="setting-row__title">Volume</p>
+          <p class="setting-row__desc">Volume des effets sonores</p>
+        </div>
+        <input type="range" id="range-volume" min="0" max="100" value="60" class="slider" aria-label="Volume">
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <p class="setting-row__title">Animations</p>
+          <p class="setting-row__desc">Réduire ou activer les animations</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-animations" checked>
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </label>
+      </div>
+
+      <div class="setting-row setting-row--danger">
+        <div>
+          <p class="setting-row__title">Réinitialiser les statistiques</p>
+          <p class="setting-row__desc">Remet à zéro les scores et l'historique</p>
+        </div>
+        <button class="btn btn--ghost btn--danger" id="btn-reset-stats">Réinitialiser</button>
+      </div>
+
+      <div class="setting-row setting-row--danger">
+        <div>
+          <p class="setting-row__title">Réinitialisation complète</p>
+          <p class="setting-row__desc">Efface toutes les données locales (stats, succès, préférences)</p>
+        </div>
+        <button class="btn btn--ghost btn--danger" id="btn-reset-all">Tout effacer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODALE STATISTIQUES / SUCCÈS                                  -->
+<!-- ============================================================ -->
+<div id="modal-stats" class="modal-overlay" hidden>
+  <div class="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="stats-title">
+    <div class="modal__header">
+      <h2 id="stats-title">Statistiques</h2>
+      <button class="icon-btn" id="btn-close-stats" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__body" id="stats-body">
+      <!-- Rempli dynamiquement par ui.js -->
+    </div>
+  </div>
+</div>
+
+<!-- Zone de confettis pour les victoires -->
+<div id="confetti-layer" class="confetti-layer" aria-hidden="true"></div>
+
+<!-- Zone de notifications toast (succès débloqués, messages) -->
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS                                                       -->
+<!-- Chargés en scripts classiques (et non en modules ES) afin    -->
+<!-- que le site fonctionne en ouvrant directement index.html     -->
+<!-- (les modules ES sont bloqués par la politique CORS des       -->
+<!-- navigateurs lorsqu'ils sont chargés depuis file://).         -->
+<!-- Chaque fichier s'enregistre comme un "module" logique sur    -->
+<!-- l'espace de nom global window.MG pour rester organisé.       -->
+<!-- ============================================================ -->
+<script src="js/storage.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/ui.js"></script>
+<script src="games/chifoumi.js"></script>
+<script src="games/morpion.js"></script>
+<script src="games/batailleNavale.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
