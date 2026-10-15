@@ -44,17 +44,14 @@ Construit uniquement en **HTML5 / CSS3 / JavaScript Vanilla (ES6+)** — aucun f
 │      morpion.js                → Logique du Morpion + IA Minimax
 │      batailleNavale.js         → Logique de la Bataille Navale + IA chasse/cible
 │
-├── assets/
-│      icons/                    → (réservé à d'éventuelles icônes futures)
-│      sounds/                   → (réservé : les sons sont actuellement 100% synthétisés en JS)
-│      images/                   → (réservé à d'éventuelles illustrations futures)
+├── docs/                      → Captures d'écran
 │
 └── README.md
 ```
 
-> **Note sur les modules JavaScript** : le code est organisé en modules logiques (un fichier = une responsabilité, encapsulé dans une IIFE qui expose une API minimale sur l'espace de noms global `window.MG`). Nous n'utilisons volontairement **pas** la syntaxe `import`/`export` des modules ES6 : ceux-ci sont bloqués par la politique CORS des navigateurs (Chrome/Edge) lorsqu'ils sont chargés depuis `file://`, ce qui empêcherait le site de fonctionner en ouvrant simplement `index.html`. Cette approche garantit un fonctionnement identique dans tous les navigateurs, sans serveur local.
+> **Note sur les modules JavaScript** : le code est organisé en modules logiques (un fichier = une responsabilité, encapsulé dans une IIFE qui expose une API minimale sur l'espace de noms global `window.MG`). Je n'utilise volontairement **pas** la syntaxe `import`/`export` des modules ES6 : ceux-ci sont bloqués par la politique CORS des navigateurs (Chrome/Edge) lorsqu'ils sont chargés depuis `file://`, ce qui empêcherait le site de fonctionner en ouvrant simplement `index.html`. Cette approche garantit un fonctionnement identique dans tous les navigateurs, sans serveur local.
 
-> **Note sur les assets** : pour que le projet reste 100% autonome (aucun fichier binaire manquant, aucune dépendance externe), les sons sont **synthétisés en direct** par `js/sound.js` via la Web Audio API plutôt que chargés depuis `assets/sounds/`. Les dossiers `assets/icons` et `assets/images` sont conservés dans l'arborescence pour respecter la structure demandée et accueillir de futures ressources ; les icônes actuelles sont des SVG inline et des emojis, ce qui évite tout fichier image manquant.
+> **Note sur les sons** : les effets sonores sont **synthétisés en direct** par `js/sound.js` via la Web Audio API, et les icônes sont des SVG intégrés au code : le projet ne dépend d'aucun fichier externe.
 
 ---
 
@@ -104,12 +101,9 @@ Choix aléatoire de l'IA parmi Pierre/Feuille/Ciseaux, comparaison via une table
 
 ## 📸 Captures d'écran
 
-*(emplacements réservés — ajoutez vos propres captures ici)*
+![Écran d'accueil](docs/accueil.png)
 
-- `assets/images/screenshot-accueil.png`
-- `assets/images/screenshot-chifoumi.png`
-- `assets/images/screenshot-morpion.png`
-- `assets/images/screenshot-bataille.png`
+![Morpion contre l'IA](docs/morpion.png)
 
 ---
 
@@ -133,4 +127,6 @@ Choix aléatoire de l'IA parmi Pierre/Feuille/Ciseaux, comparaison via une table
 - Aucune duplication majeure entre les trois jeux malgré des mécaniques différentes.
 - Séparation claire des responsabilités : stockage / son / interface / logique de jeu.
 
-Bon jeu ! 🎉
+---
+
+Projet d'école réalisé par **Nicolas Zogo Obame**, étudiant en Bachelor Ingénierie du Web à l'ESGI Grenoble.
